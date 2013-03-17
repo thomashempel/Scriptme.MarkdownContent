@@ -1,0 +1,3 @@
+[submodule "Resources/Private/Contrib/php-markdown"]
+	path = Resources/Private/Contrib/php-markdown
+	url = git@github.com:thomashempel/php-markdown.git
