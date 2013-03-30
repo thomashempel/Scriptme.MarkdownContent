@@ -12,6 +12,7 @@ namespace Scriptme\MarkdownContent\ViewHelpers;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use \Scriptme\MarkdownContent\Utility\Files as Files;
 
 class MenuViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 {
@@ -28,13 +29,16 @@ class MenuViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 	{
 		$packageKey = $package === NULL ? $this->controllerContext->getRequest()->getControllerPackageKey() : $package;
 		$subpackageKey = $subpackage === NULL ? $this->controllerContext->getRequest()->getControllerSubpackageKey() : $subpackage;
-
-		$baseDirectory = FLOW_PATH_PACKAGES . 'Application/' . $packageKey . '/Resources/Private/' . ($subpackageKey !== NULL ? $subpackageKey . '/' : '') . 'Content';
+		$baseDirectory = Files::contentBaseDirectory($packageKey, $subpackageKey);
 		$searchDirectory = $baseDirectory . $path;
+
 		$pages = $this->fetchPagesFromPath($searchDirectory, $baseDirectory, $currentPath, $recursive, $maxLevel, 0);
 
 		$this->templateVariableContainer->add('pages', $pages);
-		return $this->renderChildren();
+		$content = $this->renderChildren();
+		$this->templateVariableContainer->remove('pages');
+
+		return $content;
 	}
 
 	/**
@@ -51,7 +55,7 @@ class MenuViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 		$rootline = explode('-', $currentPath);
 
 		foreach ($directories as $directory) {
-			$metaData = $this->fetchMetaInformationForDirectory($directory);
+			$metaData = Files::fetchMetaInformationForDirectory($directory);
 			$pageData = array();
 
 			if (!$metaData) continue;
@@ -86,21 +90,6 @@ class MenuViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 		} else {
 			return FALSE;
 		}
-	}
-
-	/**
-	 * @param string $directory
-	 * @return array
-	 */
-	protected function fetchMetaInformationForDirectory($directory)
-	{
-		$metaFileName = $directory . '/Meta.yaml';
-		if (!file_exists($metaFileName)) {
-			return FALSE;
-		}
-
-		$metaData = \Symfony\Component\Yaml\Yaml::parse($metaFileName);
-		return $metaData;
 	}
 }
 
