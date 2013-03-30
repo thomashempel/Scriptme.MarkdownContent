@@ -28,10 +28,20 @@
 
 <f:section name="Content">
 
-	You are here: "{currentPath}"
+	<f:link.action action="index" arguments="{path:''}">Home</f:link.action>
 
+	You are here: "{currentPath}"
 	<mdc:menu path="/" currentPath="{currentPath}">
 		<f:render section="menuLevel" arguments="{currentPath:currentPath,pages:pages}" />
 	</mdc:menu>
+
+	<mdc:menu path="/func/" currentPath="{currentPath}">
+		FUNC:
+		<f:render section="menuLevel" arguments="{currentPath:currentPath,pages:pages}" />
+	</mdc:menu>
+
+	<div id="content" style="border:1px black solid">
+		<mdc:md name="Content">{mdHTML}</mdc:md>
+	</div>
 
 </f:section>
