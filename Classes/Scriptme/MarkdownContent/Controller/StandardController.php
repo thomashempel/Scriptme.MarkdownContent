@@ -18,12 +18,11 @@ class StandardController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	/**
 	 * Index action
 	 *
+	 * @param string $path
 	 * @return void
 	 */
-	public function indexAction() {
-		$this->view->assign('foos', array(
-			'bar', 'baz'
-		));
+	public function indexAction($path = '') {
+		$this->view->assign('currentPath', urldecode($path));
 	}
 
 }
