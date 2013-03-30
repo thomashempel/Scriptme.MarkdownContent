@@ -1,0 +1,5 @@
+Title: 'Page Three'
+Layout: 'Default'
+Template: 'Homepage'
+Visible: True
+InMenu: True

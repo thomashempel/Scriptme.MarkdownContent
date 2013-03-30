@@ -1,0 +1,5 @@
+Title: 'Page Two'
+Layout: 'Default'
+Template: 'Homepage'
+Visible: True
+InMenu: True
