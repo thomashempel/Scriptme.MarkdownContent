@@ -9,10 +9,11 @@ Markdown: Test
 		* List 1.2.2
 
 # Links
-[Foo](func/)
+* [Foo](func/)
+* [Some subpage](page3-subpage31-subpage312/)
 
 # Images
-![alt text](avatar-640x480.png "Title")
+![alt text](Images/avatar-640x480.png "Title")
 
 ## In subfolder
-![alt text](subfolder/thomas_200x200.png "Another Title")
+![alt text](Images/subfolder/thomas_200x200.png "Another Title")
