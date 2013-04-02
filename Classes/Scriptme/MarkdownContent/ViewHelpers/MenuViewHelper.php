@@ -52,7 +52,7 @@ class MenuViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 	{
 		$pages = array();
 		$directories = \Scriptme\MarkdownContent\Utility\Files::getDirectoriesInPath($path);
-		$rootline = explode('-', $currentPath);
+		$rootline = explode('/', $currentPath);
 
 		foreach ($directories as $directory) {
 			$metaData = Files::fetchMetaInformationForDirectory($directory);
@@ -64,9 +64,9 @@ class MenuViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 
 			$pageData['meta'] = $metaData;
 
-			$pageData['path'] = str_replace(array($basePath.'/', '/'), array('', '-'), $directory);
+			$pageData['path'] = str_replace($basePath.'/', '', $directory);
 
-			$pathSegments = explode('-', $pageData['path']);
+			$pathSegments = explode('/', $pageData['path']);
 			$pageData['name'] = $pathSegments[count($pathSegments) -1];
 
 			if (in_array($pageData['name'], $rootline)) {
