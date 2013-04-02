@@ -3,41 +3,18 @@
 
 <f:section name="Title">Index view of Standard controller</f:section>
 
-
-<f:section name="menuLevel">
-	<ul>
-		<f:for each="{pages}" as="page">
-			<f:if condition="{page.current}">
-				<f:then>
-					<li class="current">
-						<f:link.action action="index" arguments="{path:page.path}">{page.meta.Title}</f:link.action>
-						<f:if condition="{page.children}">
-							<f:render section="menuLevel" arguments="{currentPath:currentPath,pages:page.children}" />
-						</f:if>
-					</li>
-				</f:then>
-				<f:else>
-					<li>
-						<f:link.action action="index" arguments="{path:page.path}">{page.meta.Title}</f:link.action>
-					</li>
-				</f:else>
-			</f:if>
-		</f:for>
-	</ul>
-</f:section>
-
 <f:section name="Content">
 
 	<f:link.action action="index" arguments="{path:''}">Home</f:link.action>
 
 	You are here: "{currentPath}"
 	<mdc:menu path="/" currentPath="{currentPath}">
-		<f:render section="menuLevel" arguments="{currentPath:currentPath,pages:pages}" />
+		<f:render partial="Menus/Main" arguments="{currentPath:currentPath,pages:pages}" />
 	</mdc:menu>
 
 	<mdc:menu path="/func/" currentPath="{currentPath}">
 		FUNC:
-		<f:render section="menuLevel" arguments="{currentPath:currentPath,pages:pages}" />
+		<f:render partial="Menus/Main" arguments="{currentPath:currentPath,pages:pages}" />
 	</mdc:menu>
 
 	<div id="content">
