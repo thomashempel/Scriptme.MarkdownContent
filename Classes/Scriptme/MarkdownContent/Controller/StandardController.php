@@ -41,7 +41,6 @@ class StandardController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		}
 
 		$metaData = Files::fetchMetaInformationForDirectory($fsPath);
-		// $contents = Files::getFilesInPath($baseDirectory . '/' . $path, 'md');
 
 		$this->session->putData('currentPath', $path);
 		$this->view->assign('currentPath', urldecode($path));
