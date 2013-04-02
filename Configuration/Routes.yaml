@@ -1,7 +1,17 @@
 -
   name: 'MarkdownContent Catchall'
-  uriPattern: '{@package}/{@controller}/{@action}(/{path})'
+  uriPattern: '{path}'
   defaults:
-    '@package':    'Scriptme.MarkdownContent'
+    '@package': 'Scriptme.MarkdownContent'
     '@controller': 'Standard'
-    '@action': 'Index'
+    '@action': 'index'
+    '@format': 'html'
+
+-
+ name: 'MarkdownContent fallback'
+ uriPattern: ''
+ defaults:
+   '@package': 'Scriptme.MarkdownContent'
+   '@controller': 'Standard'
+   '@action': 'index'
+   '@format': 'html'
