@@ -1,24 +1,18 @@
 {namespace mdc=Scriptme\MarkdownContent\ViewHelpers}
 <f:layout name="Default"/>
 
-<f:section name="Title">Index view of Standard controller</f:section>
+<f:section name="Title">{metaData.Title}</f:section>
 
 <f:section name="Content">
-
 	<f:link.action action="index" arguments="{path:''}">Home</f:link.action>
 
-	You are here: "{currentPath}"
 	<mdc:menu path="/" currentPath="{currentPath}">
 		<f:render partial="Menus/Main" arguments="{currentPath:currentPath,pages:pages}" />
 	</mdc:menu>
 
 	<mdc:menu path="/func/" currentPath="{currentPath}">
-		FUNC:
 		<f:render partial="Menus/Main" arguments="{currentPath:currentPath,pages:pages}" />
 	</mdc:menu>
 
-	<div id="content">
-		<mdc:md name="Content" />
-	</div>
-
+	<f:render partial="Pages/{metaData.Template}" arguments="{_all}" />
 </f:section>

@@ -37,7 +37,6 @@ class MdViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 	 */
 	public function render($name = 'Content', $package = NULL, $subpackage = NULL)
 	{
-
 		$currentPath = $this->session->getData('currentPath');
 
 		$packageKey = $package === NULL ? $this->controllerContext->getRequest()->getControllerPackageKey() : $package;
