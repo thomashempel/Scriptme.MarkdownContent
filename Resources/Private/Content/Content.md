@@ -10,7 +10,7 @@ Markdown: Test
 
 # Links
 * [Foo](func/)
-* [Some subpage](page3-subpage31-subpage312/)
+* [Some subpage](page3/subpage31/subpage312/)
 
 # Images
 ![alt text](Images/avatar-640x480.png "Title")
