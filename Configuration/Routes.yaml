@@ -6,4 +6,7 @@
     '@controller': 'Standard'
     '@action': 'index'
     '@format': 'html'
+  routeParts:
+    path:
+      handler: Scriptme\MarkdownContent\Routing\FrontendNodeRoutePartHandler
   appendExceedingArguments: true
