@@ -32,5 +32,10 @@ class FrontendNodeRoutePartHandler extends \TYPO3\Flow\Mvc\Routing\DynamicRouteP
 		return $requestPath;
 	}
 
+	protected function matchValue()
+	{
+		return TRUE;
+	}
+
 }
 ?>
