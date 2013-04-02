@@ -49,10 +49,33 @@ class MdViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 			return '';
 		}
 
+		// load markdown content from file and render to HTML
 		$mdData = file_get_contents($fileName);
 		$html = Md::defaultTransform($mdData);
 
-		return $html;
+		// load html into DOM
+		$dom = new \DOMDocument();
+		$dom->loadHTML($html);
+
+		// find all image tags and replace the sources with fluid resource links
+		$imageTags = $dom->getElementsByTagName('img');
+		foreach($imageTags as $tag) {
+			$src = $tag->getAttribute('src');
+			if (substr($src, 0, 1) == '{') continue;
+			$resource = '{f:uri.resource(path: \'' . $src . '\', package:\'' . $packageKey . '\')}';
+			$tag->setAttribute('src', $resource);
+		}
+
+		// remove body tag that was created in loadHTML method
+		$innerHTML = '';
+		foreach ($dom->getElementsByTagName('body')->item(0)->childNodes as $child) {
+			$innerHTML .= $dom->saveXML($child);
+		}
+
+		// create a new fluid template with the cleaned HTML, render it and return the result
+		$view = new \TYPO3\Fluid\View\StandaloneView();
+		$view->setTemplateSource($innerHTML);
+		return $view->render();
 	}
 
 }
