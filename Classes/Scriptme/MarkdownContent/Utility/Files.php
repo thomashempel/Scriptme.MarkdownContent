@@ -101,6 +101,8 @@ class Files extends \TYPO3\Flow\Utility\Files
 
 	static public function contentBaseDirectory($packageKey, $subpackageKey)
 	{
-		return FLOW_PATH_PACKAGES . 'Application/' . $packageKey . '/Resources/Private/' . ($subpackageKey !== NULL ? $subpackageKey . '/' : '') . 'Content';
+		$path = FLOW_PATH_PACKAGES . 'Application/' . $packageKey . '/Resources/Private/' . ($subpackageKey !== NULL ? $subpackageKey . '/' : '') . 'Content';
+		if (substr($path, -1, 1) != '/') $path .= '/';
+		return $path;
 	}
 }
