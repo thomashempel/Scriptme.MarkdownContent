@@ -33,9 +33,14 @@ class StandardController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		$subpackageKey = $this->controllerContext->getRequest()->getControllerSubpackageKey();
 		$baseDirectory = Files::contentBaseDirectory($packageKey, $subpackageKey);
 
-		$fsPath = str_replace('-', '/', urldecode($path));
+		$path = str_replace(array('../', '.html'), '', $path);
+		$fsPath = $baseDirectory . '/' . $path;
 
-		$metaData = Files::fetchMetaInformationForDirectory($baseDirectory . '/' . $fsPath);
+		if (!file_exists($fsPath) || !is_dir($fsPath)) {
+			$this->throwStatus(404);
+		}
+
+		$metaData = Files::fetchMetaInformationForDirectory($fsPath);
 		// $contents = Files::getFilesInPath($baseDirectory . '/' . $path, 'md');
 
 		$this->session->putData('currentPath', $path);
