@@ -41,8 +41,10 @@ class MdViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 
 		$packageKey = $package === NULL ? $this->controllerContext->getRequest()->getControllerPackageKey() : $package;
 		$subpackageKey = $subpackage === NULL ? $this->controllerContext->getRequest()->getControllerSubpackageKey() : $subpackage;
-		$baseDirectory = Files::contentBaseDirectory($packageKey, $subpackageKey);
-		$fileName = $baseDirectory . $currentPath . '/' . $name . '.md';
+		$packageContentDirectory = Files::packageContentDirectory($packageKey, $subpackageKey);
+
+		if (substr($currentPath, -1, 1) != '/') $currentPath .= '/';
+		$fileName = $packageContentDirectory . $currentPath . $name . '.md';
 
 		if (!file_exists($fileName)) {
 			return '';

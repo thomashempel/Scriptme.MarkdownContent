@@ -29,10 +29,10 @@ class MenuViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 	{
 		$packageKey = $package === NULL ? $this->controllerContext->getRequest()->getControllerPackageKey() : $package;
 		$subpackageKey = $subpackage === NULL ? $this->controllerContext->getRequest()->getControllerSubpackageKey() : $subpackage;
-		$baseDirectory = Files::contentBaseDirectory($packageKey, $subpackageKey);
-		$searchDirectory = $baseDirectory . $path;
+		$packageContentDirectory = Files::packageContentDirectory($packageKey, $subpackageKey);
+		$searchDirectory = $packageContentDirectory . $path;
 
-		$pages = $this->fetchPagesFromPath($searchDirectory, $baseDirectory, $currentPath, $recursive, $maxLevel, 0);
+		$pages = $this->fetchPagesFromPath($searchDirectory, $packageContentDirectory, $currentPath, $recursive, $maxLevel, 0);
 
 		$this->templateVariableContainer->add('pages', $pages);
 		$content = $this->renderChildren();
