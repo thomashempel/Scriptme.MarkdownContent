@@ -99,10 +99,25 @@ class Files extends \TYPO3\Flow\Utility\Files
 		return $metaData;
 	}
 
-	static public function contentBaseDirectory($packageKey, $subpackageKey)
+	static public function packageContentDirectory($packageKey, $subpackageKey)
 	{
-		$path = FLOW_PATH_PACKAGES . 'Application/' . $packageKey . '/Resources/Private/' . ($subpackageKey !== NULL ? $subpackageKey . '/' : '') . 'Content';
-		if (substr($path, -1, 1) != '/') $path .= '/';
+		$path = self::packageResourcesDirectory($packageKey);
+		$path .= 'Private/' . ($subpackageKey !== NULL ? $subpackageKey . '/' : '') . 'Content/';
+
+		return $path;
+	}
+
+	static public function packageResourcesDirectory($packageKey)
+	{
+		$path = FLOW_PATH_PACKAGES . 'Sites/' . $packageKey . '/Resources/';
+		if (!file_exists($path) || !is_dir($path)) {
+			$path = FLOW_PATH_PACKAGES . 'Application/' . $packageKey . '/Resources/';
+		}
+
+		if (!file_exists($path) || !is_dir($path)) {
+			throw new \TYPO3\Flow\Utility\Exception('"' . $packageKey . '" is neither an application nor a site package.', 1365003292);
+		}
+
 		return $path;
 	}
 }
