@@ -1,3 +1,4 @@
+{namespace mdc=Scriptme\MarkdownContent\ViewHelpers}
 <!DOCTYPE html>
 <html>
 	<head>
@@ -7,6 +8,12 @@
 	</head>
 	<body>
 		<f:flashMessages class="flashmessages" />
+		
+		<mdc:link.action action="index" arguments="{path:''}">Home</mdc:link.action>
+
+		<mdc:menu path="/" currentPath="{currentPath}">
+			<f:render partial="Menus/Main" arguments="{currentPath:currentPath,pages:pages}" />
+		</mdc:menu>
 
 		<h1><f:render section="Title" /></h1>
 		<f:render section="Content" />
