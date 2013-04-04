@@ -44,7 +44,7 @@ class StandardController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	{
 		$externalPackage = FALSE;
 
-		if ($this->settings['SitePackage']) {
+		if (isset($this->settings['SitePackage'])) {
 			$packageKey = $this->settings['SitePackage'];
 			$subpackageKey = NULL;
 			$externalPackage = TRUE;
@@ -78,7 +78,6 @@ class StandardController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$controllerContext->getRequest()->setControllerPackageKey($packageKey);
 			$view->setControllerContext($controllerContext);
 
-			// $view->setLayoutPathAndFilename($packageResourcesDirectory.'Private/Templates/Page/'.$metaData['Layout'].'.html');
 			$view->setTemplatePathAndFilename($packageResourcesDirectory.'Private/Templates/'.$metaData['Template'].'.html');
 
 			$view->setLayoutRootPath($packageResourcesDirectory.'Private/Templates/Page/');
@@ -91,6 +90,12 @@ class StandardController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$view->canRender($this->getControllerContext());
 			return $view->render();
 		} else {
+			$this->view->setTemplatePathAndFilename($packageResourcesDirectory.'Private/Templates/'.$metaData['Template'].'.html');
+
+			$this->view->setLayoutRootPath($packageResourcesDirectory.'Private/Templates/Page/');
+			$this->view->setTemplateRootPath($packageResourcesDirectory.'Private/Templates/');
+			$this->view->setPartialRootPath($packageResourcesDirectory.'Private/Partials/');
+
 			$this->view->assign('currentPath', urldecode($path));
 			$this->view->assign('metaData', $metaData);
 		}
