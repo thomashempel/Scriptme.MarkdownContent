@@ -39,11 +39,11 @@ class IncludeViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 
 		$parentRequest = $this->controllerContext->getRequest();
 		$pluginRequest = new ActionRequest($parentRequest);
-		// $pluginRequest->setArgumentNamespace('--' . $this->getPluginNamespace());
-		// $this->passArgumentsToPluginRequest($pluginRequest);
+		$pluginRequest->setArgumentNamespace('--' . 'test');
+		//$this->passArgumentsToPluginRequest($pluginRequest);
 
 		$pluginRequest->setArguments($parentRequest->getArguments());
-		// $pluginNamespace = $this->getPluginNamespace();
+		//$pluginNamespace = $this->getPluginNamespace();
 		$pluginRequest->setControllerPackageKey($package);
 		$pluginRequest->setControllerName($controller);
 		$pluginRequest->setControllerActionName($action);
@@ -54,42 +54,6 @@ class IncludeViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 		$this->dispatcher->dispatch($pluginRequest, $pluginResponse);
 
 		return $pluginResponse->getContent();
-
-		/*
-		if ($this->node instanceof \TYPO3\TYPO3CR\Domain\Model\PersistentNodeInterface) {
-			if ($pluginRequest->getControllerPackageKey() === NULL) {
-				$pluginRequest->setControllerPackageKey($this->node->getProperty('package') ?: $this->package);
-			}
-			if ($pluginRequest->getControllerSubpackageKey() === NULL) {
-				$pluginRequest->setControllerSubpackageKey($this->node->getProperty('subpackage') ?: $this->subpackage);
-			}
-			if ($pluginRequest->getControllerName() === NULL) {
-				$pluginRequest->setControllerName($this->node->getProperty('controller') ?: $this->controller);
-			}
-			if ($this->action === NULL) {
-				$this->action = 'index';
-			}
-			if ($pluginRequest->getControllerActionName() === NULL) {
-				$pluginRequest->setControllerActionName($this->node->getProperty('action') ?: $this->action);
-			}
-
-			// TODO: Check if we want to use all properties as arguments
-			//     This enables us to configure plugin controller arguments via
-			//     node type definitions for now.
-			foreach ($this->node->getProperties() as $propertyName => $propertyValue) {
-				$propertyName = '--' . $propertyName;
-				if (!in_array($propertyName, array('--package', '--subpackage', '--controller', '--action', '--format')) && !$pluginRequest->hasArgument($propertyName)) {
-					$pluginRequest->setArgument($propertyName, $propertyValue);
-				}
-			}
-		} else {
-			$pluginRequest->setControllerPackageKey($this->getPackage());
-			$pluginRequest->setControllerSubpackageKey($this->getSubpackage());
-			$pluginRequest->setControllerName($this->getController());
-			$pluginRequest->setControllerActionName($this->getAction());
-		}
-		return $pluginRequest;
-		*/
 	}
 
 }

@@ -6,7 +6,7 @@ use TYPO3\Flow\Annotations as Flow;
 use \Scriptme\MarkdownContent\Utility\Files as Files;
 
 /**
- * Standard controller for the Scriptme.MarkdownContent package 
+ * Standard controller for the Scriptme.MarkdownContent package
  *
  * @Flow\Scope("singleton")
  */
@@ -72,33 +72,24 @@ class StandardController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		$this->session->putData('currentPath', $path);
 
 		if ($externalPackage) {
-			$view = new \TYPO3\Fluid\View\TemplateView();
-
 			$controllerContext = clone $this->getControllerContext();
-			$controllerContext->getRequest()->setControllerPackageKey($packageKey);
-			$view->setControllerContext($controllerContext);
+			//$controllerContext->getRequest()->setControllerPackageKey($packageKey);
 
-			$view->setTemplatePathAndFilename($packageResourcesDirectory.'Private/Templates/'.$metaData['Template'].'.html');
+			$this->view->setTemplatePathAndFilename($packageResourcesDirectory.'Private/Templates/'.$metaData['Template'].'.html');
 
-			$view->setLayoutRootPath($packageResourcesDirectory.'Private/Templates/Page/');
-			$view->setTemplateRootPath($packageResourcesDirectory.'Private/Templates/');
-			$view->setPartialRootPath($packageResourcesDirectory.'Private/Partials/');
-
-			$view->assign('currentPath', urldecode($path));
-			$view->assign('metaData', $metaData);
-
-			$view->canRender($this->getControllerContext());
-			return $view->render();
+			$this->view->setLayoutRootPath($packageResourcesDirectory.'Private/Templates/Page/');
+			$this->view->setTemplateRootPath($packageResourcesDirectory.'Private/Templates/');
+			$this->view->setPartialRootPath($packageResourcesDirectory.'Private/Partials/');
 		} else {
 			$this->view->setTemplatePathAndFilename($packageResourcesDirectory.'Private/Templates/'.$metaData['Template'].'.html');
 
 			$this->view->setLayoutRootPath($packageResourcesDirectory.'Private/Templates/Page/');
 			$this->view->setTemplateRootPath($packageResourcesDirectory.'Private/Templates/');
 			$this->view->setPartialRootPath($packageResourcesDirectory.'Private/Partials/');
-
-			$this->view->assign('currentPath', urldecode($path));
-			$this->view->assign('metaData', $metaData);
 		}
+
+		$this->view->assign('currentPath', urldecode($path));
+		$this->view->assign('metaData', $metaData);
 	}
 
 
