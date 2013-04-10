@@ -27,6 +27,12 @@ class IncludeViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 	protected $dispatcher;
 
 	/**
+	 * Namespace used for this plugin
+	 * @var string
+	 */
+	protected $pluginNamespace = 'scriptme_markdowncontent_plugin';
+
+	/**
 	 * @param $package
 	 * @param $controller
 	 * @param $action
@@ -35,18 +41,27 @@ class IncludeViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 	 */
 	public function render($package, $controller, $action)
 	{
-		// return $package.'/'.$controller.'->'.$action;
-
 		$parentRequest = $this->controllerContext->getRequest();
 		$pluginRequest = new ActionRequest($parentRequest);
-		$pluginRequest->setArgumentNamespace('--' . 'test');
-		//$this->passArgumentsToPluginRequest($pluginRequest);
+		$pluginRequest->setArgumentNamespace('--' . $this->pluginNamespace);
 
-		$pluginRequest->setArguments($parentRequest->getArguments());
-		//$pluginNamespace = $this->getPluginNamespace();
-		$pluginRequest->setControllerPackageKey($package);
-		$pluginRequest->setControllerName($controller);
-		$pluginRequest->setControllerActionName($action);
+		$arguments = $pluginRequest->getMainRequest()->getPluginArguments();
+
+		if (isset($arguments[$this->pluginNamespace])) {
+			$pluginRequest->setArguments($arguments[$this->pluginNamespace]);
+		}
+
+		if ($pluginRequest->getControllerPackageKey() === NULL) {
+			$pluginRequest->setControllerPackageKey($package);
+		}
+
+		if ($pluginRequest->getControllerName() === NULL) {
+			$pluginRequest->setControllerName($controller);
+		}
+
+		if ($pluginRequest->getControllerActionName() === NULL) {
+			$pluginRequest->setControllerActionName($action);
+		}
 
 		$parentResponse = $this->controllerContext->getResponse();
 		$pluginResponse = new Response($parentResponse);
