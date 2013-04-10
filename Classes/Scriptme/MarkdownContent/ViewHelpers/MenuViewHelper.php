@@ -18,6 +18,13 @@ class MenuViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 {
 
 	/**
+	 *
+	 * @var \Scriptme\MarkdownContent\Domain\Service\Context
+	 * @Flow\inject
+	 */
+	protected $context;
+
+	/**
 	 * @param null $package
 	 * @param null $subpackage
 	 * @param string $path
@@ -27,9 +34,14 @@ class MenuViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 	 */
 	public function render($package = NULL, $subpackage = NULL, $path = '/', $currentPath = '/', $recursive = TRUE, $maxLevel = 5)
 	{
-		$packageKey = $package === NULL ? $this->controllerContext->getRequest()->getControllerPackageKey() : $package;
-		$subpackageKey = $subpackage === NULL ? $this->controllerContext->getRequest()->getControllerSubpackageKey() : $subpackage;
-		$packageContentDirectory = Files::packageContentDirectory($packageKey, $subpackageKey);
+		if($package !== NULL || $subpackage !== NULL) {
+			$packageKey = $package === NULL ? $this->context->getSitePackageKey() : $package;
+			$subpackageKey = $subpackage === NULL ? $this->controllerContext->getRequest()->getControllerSubpackageKey() : $subpackage;
+			$packageContentDirectory = Files::packageContentDirectory($packageKey, $subpackageKey);
+		}else {
+			$packageContentDirectory = $this->context->getContentDirectory();
+		}
+
 		$searchDirectory = $packageContentDirectory . $path;
 
 		$pages = $this->fetchPagesFromPath($searchDirectory, $packageContentDirectory, $currentPath, $recursive, $maxLevel, 0);
