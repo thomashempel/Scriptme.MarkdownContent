@@ -74,7 +74,7 @@ class MdViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 		foreach($imageTags as $tag) {
 			$src = $tag->getAttribute('src');
 			if (substr($src, 0, 1) == '{') continue;
-			$resource = '{f:uri.resource(path: \'' . $src . '\', package:\'' . $packageKey . '\')}';
+			$resource = '{f:uri.resource(path: \'' . $src . '\', package:\'' . ($package === NULL ? $this->context->getSitePackageKey() : $package) . '\')}';
 			$tag->setAttribute('src', $resource);
 		}
 
