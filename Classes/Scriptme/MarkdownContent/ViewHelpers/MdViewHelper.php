@@ -27,6 +27,13 @@ class MdViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 	protected $session;
 
 	/**
+	 *
+	 * @var \Scriptme\MarkdownContent\Domain\Service\Context
+	 * @Flow\inject
+	 */
+	protected $context;
+
+	/**
 	 * @param string $name
 	 * @param string $package
 	 * @param string $subpackage
@@ -39,9 +46,13 @@ class MdViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 	{
 		$currentPath = $this->session->getData('currentPath');
 
-		$packageKey = $package === NULL ? $this->controllerContext->getRequest()->getControllerPackageKey() : $package;
-		$subpackageKey = $subpackage === NULL ? $this->controllerContext->getRequest()->getControllerSubpackageKey() : $subpackage;
-		$packageContentDirectory = Files::packageContentDirectory($packageKey, $subpackageKey);
+		if($package !== NULL || $subpackage !== NULL) {
+			$packageKey = $package === NULL ? $this->context->getSitePackageKey() : $package;
+			$subpackageKey = $subpackage === NULL ? $this->controllerContext->getRequest()->getControllerSubpackageKey() : $subpackage;
+			$packageContentDirectory = Files::packageContentDirectory($packageKey, $subpackageKey);
+		}else {
+			$packageContentDirectory = $this->context->getContentDirectory();
+		}
 
 		if (substr($currentPath, -1, 1) != '/') $currentPath .= '/';
 		$fileName = $packageContentDirectory . $currentPath . $name . '.md';
@@ -63,7 +74,7 @@ class MdViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 		foreach($imageTags as $tag) {
 			$src = $tag->getAttribute('src');
 			if (substr($src, 0, 1) == '{') continue;
-			$resource = '{f:uri.resource(path: \'' . $src . '\', package:\'' . $packageKey . '\')}';
+			$resource = '{f:uri.resource(path: \'' . $src . '\', package:\'' . ($package === NULL ? $this->context->getSitePackageKey() : $package) . '\')}';
 			$tag->setAttribute('src', $resource);
 		}
 
