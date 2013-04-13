@@ -13,14 +13,21 @@ namespace Scriptme\MarkdownContent\ViewHelpers;
 
 require_once FLOW_PATH_PACKAGES . 'Application/Scriptme.MarkdownContent/Resources/Private/PHP/php-markdown/Michelf/Markdown.php';
 
-use \Michelf\Markdown as Md;
+use TYPO3\Flow\Annotations as Flow;
+use \Michelf\Markdown as MdExtra;
 
-class MdViewHelper extends \Scriptme\MarkdownContent\ViewHelpers\AbstractMdViewHelper
+/**
+ * Class MdExtraViewHelper
+ *
+ * This class is supposed to include the markdown extra implementation.
+ *
+ * @package Scriptme\MarkdownContent\ViewHelpers
+ */
+class MdExtraViewHelper extends \Scriptme\MarkdownContent\ViewHelpers\AbstractMdViewHelper
 {
-
 	protected function parseMarkDown($markdown)
 	{
-		return Md::defaultTransform($markdown);
+		return MdExtra::defaultTransform($markdown);
 	}
 }
 
