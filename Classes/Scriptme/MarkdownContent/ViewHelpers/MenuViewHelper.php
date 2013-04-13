@@ -25,16 +25,21 @@ class MenuViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 	protected $context;
 
 	/**
+	 * Render stuff
+	 *
 	 * @param null $package
 	 * @param null $subpackage
 	 * @param string $path
 	 * @param string $currentPath
+	 * @param boolean $addRoot
 	 * @param boolean $recursive
 	 * @param integer $maxLevel
+	 *
+	 * @return string
 	 */
-	public function render($package = NULL, $subpackage = NULL, $path = '/', $currentPath = '/', $recursive = TRUE, $maxLevel = 5)
+	public function render($package = NULL, $subpackage = NULL, $path = '/', $currentPath = '/', $addRoot = FALSE, $recursive = TRUE, $maxLevel = 5)
 	{
-		if($package !== NULL || $subpackage !== NULL) {
+		if ($package !== NULL || $subpackage !== NULL) {
 			$packageKey = $package === NULL ? $this->context->getSitePackageKey() : $package;
 			$subpackageKey = $subpackage === NULL ? $this->controllerContext->getRequest()->getControllerSubpackageKey() : $subpackage;
 			$packageContentDirectory = Files::packageContentDirectory($packageKey, $subpackageKey);
@@ -45,6 +50,13 @@ class MenuViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 		$searchDirectory = $packageContentDirectory . $path;
 
 		$pages = $this->fetchPagesFromPath($searchDirectory, $packageContentDirectory, $currentPath, $recursive, $maxLevel, 0);
+
+		if ($addRoot) {
+			$pageData = $this->fetchMetaDataAtPath($searchDirectory, $packageContentDirectory);
+			if ($pageData) {
+				array_unshift($pages, $pageData);
+			}
+		}
 
 		$this->templateVariableContainer->add('pages', $pages);
 		$content = $this->renderChildren();
@@ -67,23 +79,7 @@ class MenuViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 		$rootline = explode('/', $currentPath);
 
 		foreach ($directories as $directory) {
-			$metaData = Files::fetchMetaInformationForDirectory($directory);
-			$pageData = array();
-
-			if (!$metaData) continue;
-
-			if ($metaData['Visible'] === FALSE || $metaData['InMenu'] === FALSE) continue;
-
-			$pageData['meta'] = $metaData;
-
-			$pageData['path'] = str_replace($basePath.'/', '', $directory);
-
-			$pathSegments = explode('/', $pageData['path']);
-			$pageData['name'] = $pathSegments[count($pathSegments) -1];
-
-			if (in_array($pageData['name'], $rootline)) {
-				$pageData['current'] = TRUE;
-			}
+			$pageData = $this->fetchMetaDataAtPath($directory, $basePath, $rootline);
 
 			if ($recursive === TRUE && $level < $maxLevel) {
 				$subItems = $this->fetchPagesFromPath($directory, $basePath, $currentPath, $recursive, $maxLevel, $level++);
@@ -102,6 +98,34 @@ class MenuViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 		} else {
 			return FALSE;
 		}
+	}
+
+	/**
+	 * @param $path
+	 * @param $basePath
+	 * @param array|null $rootline
+	 * @return array|bool
+	 */
+	protected function fetchMetaDataAtPath($path, $basePath, $rootline = NULL)
+	{
+		$metaData = Files::fetchMetaInformationForDirectory($path);
+		$pageData = array();
+
+		if (!$metaData) return FALSE;
+
+		if ($metaData['Visible'] === FALSE || $metaData['InMenu'] === FALSE) return FALSE;
+
+		$pageData['meta'] = $metaData;
+		$pageData['path'] = str_replace($basePath.'/', '', $path);
+
+		$pathSegments = explode('/', $pageData['path']);
+		$pageData['name'] = $pathSegments[count($pathSegments) -1];
+
+		if ($rootline && in_array($pageData['name'], $rootline)) {
+			$pageData['current'] = TRUE;
+		}
+
+		return $pageData;
 	}
 }
 
