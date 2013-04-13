@@ -1,0 +1,17 @@
+{namespace mdc=Scriptme\MarkdownContent\ViewHelpers}
+<f:layout name="Default"/>
+
+<f:section name="Title">Scriptme.MarkdownContent - {metaData.Title}</f:section>
+
+<f:section name="Content">
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span10">
+			<mdc:md name="ContentMain" />
+		</div>
+		<div class="span2">
+			<mdc:md name="ContentSidebar" />
+		</div>
+	</div>
+</div>
+</f:section>

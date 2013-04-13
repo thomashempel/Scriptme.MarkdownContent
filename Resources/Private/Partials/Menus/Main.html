@@ -1,8 +1,8 @@
-<ul>
+<ul class="nav pull-right">
 	<f:for each="{pages}" as="page">
 		<f:if condition="{page.current}">
 			<f:then>
-				<li class="current">
+				<li class="active">
 					<f:link.action action="index" arguments="{path:page.path}">{page.meta.Title}</f:link.action>
 					<f:if condition="{page.children}">
 						<f:render partial="Menus/Main" arguments="{currentPath:currentPath,pages:page.children}" />

@@ -1,21 +1,101 @@
 {namespace mdc=Scriptme\MarkdownContent\ViewHelpers}
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<title><f:render section="Title" /></title>
-		<f:base />
-	</head>
-	<body>
-		<f:flashMessages class="flashmessages" />
-		
-		<mdc:link.action action="index" arguments="{path:''}">Home</mdc:link.action>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title><f:render section="Title" /></title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width">
+	<f:base />
 
-		<mdc:menu path="/" currentPath="{currentPath}">
-			<f:render partial="Menus/Main" arguments="{currentPath:currentPath,pages:pages}" />
-		</mdc:menu>
+	<link rel="stylesheet" href="{f:uri.resource(path:'css/bootstrap.css')}">
+	<style>
+		body {
+			padding-top: 60px;
+			padding-bottom: 40px;
+		}
+	</style>
+	<link rel="stylesheet" href="{f:uri.resource(path:'css/bootstrap-responsive.css')}">
+	<link rel="stylesheet" href="{f:uri.resource(path:'css/main.css')}">
 
-		<h1><f:render section="Title" /></h1>
-		<f:render section="Content" />
-	</body>
+
+
+	<script src="{f:uri.resource(path:'js/vendor/modernizr-2.6.2-respond-1.1.0.js')}"></script>
+
+
+</head>
+<body>
+
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+<![endif]-->
+
+<!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container">
+			<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</a>
+			<a class="brand" href="#">Scriptme.MarkdownContent</a>
+			<div class="nav-collapse collapse">
+				<mdc:menu>
+				<f:render partial="Menus/Main" arguments="{pages:pages}" />
+				</mdc:menu>
+			</div><!--/.nav-collapse -->
+		</div>
+	</div>
+</div>
+
+<div class="container">
+
+	<!-- Main hero unit for a primary marketing message or call to action -->
+
+	<f:render section="Content">
+		<div class="hero-unit">
+			<h1>Hello, world!</h1>
+			<p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+			<p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+		</div>
+
+		<!-- Example row of columns -->
+		<div class="row">
+			<div class="span4">
+				<h2>Heading</h2>
+				<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+				<p><a class="btn" href="#">View details &raquo;</a></p>
+			</div>
+			<div class="span4">
+				<h2>Heading</h2>
+				<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+				<p><a class="btn" href="#">View details &raquo;</a></p>
+			</div>
+			<div class="span4">
+				<h2>Heading</h2>
+				<p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+				<p><a class="btn" href="#">View details &raquo;</a></p>
+			</div>
+		</div>
+	</f:render>
+
+	<hr>
+
+	<footer>
+		<p>&copy; Thomas Hempel 2013</p>
+	</footer>
+
+</div> <!-- /container -->
+
+<script src="{f:uri.resource(path:'js/vendor/jquery-1.9.1.js')}"></script>
+<script src="{f:uri.resource(path:'js/vendor/bootstrap.min.js')}"></script>
+<script src="{f:uri.resource(path:'js/main.js')}"></script>
+
+</body>
 </html>
