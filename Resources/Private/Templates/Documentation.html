@@ -1,0 +1,20 @@
+{namespace mdc=Scriptme\MarkdownContent\ViewHelpers}
+<f:layout name="Default"/>
+
+<f:section name="Title">Scriptme.MarkdownContent - {metaData.Title}</f:section>
+
+<f:section name="Content">
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span3 bs-docs-sidebar">
+			<mdc:menu path="/documentation/" currentPath="{currentPath}" addRoot="true" recursive="false">
+				<f:render partial="Menus/Side" arguments="{pages:pages,class:'nav nav-list bs-docs-sidenav affix'}" />
+			</mdc:menu>
+		</div>
+
+		<div class="span9">
+			<mdc:md name="Content" />
+		</div>
+	</div>
+</div>
+</f:section>

@@ -1,19 +1,36 @@
-<ul class="nav pull-right">
+<f:if condition="{pages}">
+<ul class="{class}">
 	<f:for each="{pages}" as="page">
 		<f:if condition="{page.current}">
 			<f:then>
-				<li class="active">
-					<f:link.action action="index" arguments="{path:page.path}">{page.meta.Title}</f:link.action>
-					<f:if condition="{page.children}">
-						<f:render partial="Menus/Main" arguments="{currentPath:currentPath,pages:page.children}" />
-					</f:if>
-				</li>
+				<f:render section="Item" arguments="{class:'active',page:page}" />
 			</f:then>
 			<f:else>
-				<li>
-					<f:link.action action="index" arguments="{path:page.path}">{page.meta.Title}</f:link.action>
-				</li>
+				<f:render section="Item" arguments="{class:'',page:page}" />
 			</f:else>
 		</f:if>
 	</f:for>
 </ul>
+</f:if>
+
+<f:section name="Item">
+	<f:if condition="{page.children}">
+	<f:then>
+		<li class="{class} dropdown">
+	</f:then>
+	<f:else>
+		<li class="{class}">
+	</f:else>
+	</f:if>
+		<f:if condition="{page.children}">
+			<f:then>
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">{page.meta.Title} <b class="caret"></b></a>
+				<f:render partial="Menus/Main" arguments="{currentPath:currentPath,pages:page.children,class:'dropdown-menu'}" />
+			</f:then>
+			<f:else>
+				<f:link.action action="index" arguments="{path:page.path}">{page.meta.Title}</f:link.action>
+			</f:else>
+		</f:if>
+
+	</li>
+</f:section>

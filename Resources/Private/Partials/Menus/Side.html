@@ -1,0 +1,21 @@
+<f:if condition="{pages}">
+<ul class="nav nav-list bs-docs-sidenav affix">
+	<f:for each="{pages}" as="page">
+		<f:if condition="{page.current}">
+			<f:then>
+				<li class="active">
+					<f:link.action action="index" arguments="{path:page.path}">{page.meta.Title}</f:link.action>
+					<f:if condition="{page.children}">
+						<f:render partial="Menus/Main" arguments="{currentPath:currentPath,pages:page.children}" />
+					</f:if>
+				</li>
+			</f:then>
+			<f:else>
+				<li>
+					<f:link.action action="index" arguments="{path:page.path}">{page.meta.Title}</f:link.action>
+				</li>
+			</f:else>
+		</f:if>
+	</f:for>
+</ul>
+</f:if>
