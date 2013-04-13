@@ -34,10 +34,11 @@ class MenuViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 	 * @param boolean $addRoot
 	 * @param boolean $recursive
 	 * @param integer $maxLevel
+	 * @param boolean $sortPagesByOrder
 	 *
 	 * @return string
 	 */
-	public function render($package = NULL, $subpackage = NULL, $path = '/', $currentPath = '/', $addRoot = FALSE, $recursive = TRUE, $maxLevel = 5)
+	public function render($package = NULL, $subpackage = NULL, $path = '/', $currentPath = '/', $addRoot = FALSE, $recursive = TRUE, $maxLevel = 5, $sortPagesByOrder = TRUE)
 	{
 		if ($package !== NULL || $subpackage !== NULL) {
 			$packageKey = $package === NULL ? $this->context->getSitePackageKey() : $package;
@@ -49,7 +50,11 @@ class MenuViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 
 		$searchDirectory = $packageContentDirectory . $path;
 
-		$pages = $this->fetchPagesFromPath($searchDirectory, $packageContentDirectory, $currentPath, $recursive, $maxLevel, 0);
+		$pages = $this->fetchPagesFromPath($searchDirectory, $packageContentDirectory, $currentPath, $recursive, $maxLevel, 0, $sortPagesByOrder);
+
+		if($sortPagesByOrder) {
+			usort($pages, array($this, 'sortPagesByOrder'));
+		}
 
 		if ($addRoot) {
 			$pageData = $this->fetchMetaDataAtPath($searchDirectory, $packageContentDirectory);
@@ -65,6 +70,22 @@ class MenuViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 		return $content;
 	}
 
+	public function sortPagesByOrder($a, $b) {
+		if(isset($a['meta']['Order']) && isset($b['meta']['Order'])) {
+			if ($a['meta']['Order'] == $b['meta']['Order']) {
+				return 0;
+			}
+
+			return ($a['meta']['Order'] < $b['meta']['Order']) ? -1 : 1;
+		}else if(isset($a['meta']['Order']) && !isset($b['meta']['Order'])) {
+			return -1;
+		}else if(!isset($a['meta']['Order']) && isset($b['meta']['Order'])) {
+			return 1;
+		}
+
+		return 0;
+	}
+
 	/**
 	 * @param string $path
 	 * @param bool $recursive
@@ -72,7 +93,7 @@ class MenuViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 	 * @param int $level
 	 * @return array
 	 */
-	protected function fetchPagesFromPath($path, $basePath, $currentPath, $recursive = TRUE, $maxLevel = 5, $level = 0)
+	protected function fetchPagesFromPath($path, $basePath, $currentPath, $recursive = TRUE, $maxLevel = 5, $level = 0, $sortPagesByOrder = TRUE)
 	{
 		$pages = array();
 		$directories = \Scriptme\MarkdownContent\Utility\Files::getDirectoriesInPath($path);
@@ -94,6 +115,11 @@ class MenuViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 		}
 
 		if (count($pages) > 0) {
+
+			if($sortPagesByOrder) {
+				usort($pages, array($this, 'sortPagesByOrder'));
+			}
+
 			return $pages;
 		} else {
 			return FALSE;
