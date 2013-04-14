@@ -1,7 +1,8 @@
 <?php
+
 namespace Scriptme\MarkdownContent\ViewHelpers;
 
-/*                                                                        *
+/* *
  * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
@@ -17,8 +18,7 @@ use TYPO3\Flow\Http\Response;
 use \Michelf\Markdown as Md;
 use \Scriptme\MarkdownContent\Utility\Files as Files;
 
-class IncludeViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
-{
+class IncludeViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * @Flow\Inject
@@ -36,11 +36,11 @@ class IncludeViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 	 * @param $package
 	 * @param $controller
 	 * @param $action
+	 * @param string $exceptionAs
 	 *
 	 * @return string
 	 */
-	public function render($package, $controller, $action)
-	{
+	public function render($package, $controller, $action, $exceptionAs=NULL) {
 		$parentRequest = $this->controllerContext->getRequest();
 		$pluginRequest = new ActionRequest($parentRequest);
 		$pluginRequest->setArgumentNamespace('--' . $this->pluginNamespace);
@@ -66,9 +66,21 @@ class IncludeViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 		$parentResponse = $this->controllerContext->getResponse();
 		$pluginResponse = new Response($parentResponse);
 
-		$this->dispatcher->dispatch($pluginRequest, $pluginResponse);
+		try {
+			$this->dispatcher->dispatch($pluginRequest, $pluginResponse);
+			return $pluginResponse->getContent();
+		} catch (\TYPO3\Flow\Mvc\Controller\Exception\InvalidControllerException $e) {
 
-		return $pluginResponse->getContent();
+			$errorMessage = '';
+
+			if($exceptionAs !== NULL && !empty($exceptionAs)) {
+				$this->templateVariableContainer->add($exceptionAs, $e);
+				$errorMessage = $this->renderChildren();
+				$this->templateVariableContainer->remove($exceptionAs);
+			}
+
+			return $errorMessage;
+		}
 	}
 
 }

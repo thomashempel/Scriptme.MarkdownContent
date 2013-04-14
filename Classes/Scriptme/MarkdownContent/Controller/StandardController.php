@@ -66,7 +66,18 @@ class StandardController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		$pagePathInFilesystem = $packageContentDirectory . $path;
 
 		if (!file_exists($pagePathInFilesystem) || !is_dir($pagePathInFilesystem)) {
-			$this->throwStatus(404);
+			//Test if a special errorHandling is configured and test if the configured path exists
+			if($this->settings['errorHandling']['404']) {
+				$path = str_replace(array('../', '.html'), '', $this->settings['errorHandling']['404']);
+				$pagePathInFilesystem = $packageContentDirectory . $path;
+
+				if (!file_exists($pagePathInFilesystem) || !is_dir($pagePathInFilesystem)) {
+					$this->throwStatus(404);
+				}
+				$this->response->setStatus(404);
+			}else {
+				$this->throwStatus(404);
+			}
 		}
 
 		$metaData = Files::fetchMetaInformationForDirectory($pagePathInFilesystem);
