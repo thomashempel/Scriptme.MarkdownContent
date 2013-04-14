@@ -102,14 +102,14 @@ class MenuViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 		foreach ($directories as $directory) {
 			$pageData = $this->fetchMetaDataAtPath($directory, $basePath, $rootline);
 
-			if ($recursive === TRUE && $level < $maxLevel) {
+			if ($pageData && $recursive === TRUE && $level < $maxLevel) {
 				$subItems = $this->fetchPagesFromPath($directory, $basePath, $currentPath, $recursive, $maxLevel, $level++);
 				if ($subItems) {
 					$pageData['children'] = $subItems;
 				}
 			}
 
-			if (count($pageData) > 0) {
+			if (is_array($pageData) && count($pageData) > 0) {
 				$pages[] = $pageData;
 			}
 		}
