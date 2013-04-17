@@ -34,14 +34,18 @@ abstract class AbstractMdViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abstrac
 	 * @param string $name
 	 * @param string $package
 	 * @param string $subpackage
+	 * @param string $path
 	 *
 	 * @Flow\Session(autoStart = TRUE)
 	 *
 	 * @return string
 	 */
-	public function render($name = 'Content', $package = NULL, $subpackage = NULL)
+	public function render($name = 'Content', $package = NULL, $subpackage = NULL, $path = NULL)
 	{
-		$currentPath = $this->session->getData('currentPath');
+
+		if($path === NULL) {
+			$path = $this->session->getData('currentPath');
+		}
 
 		if($package !== NULL || $subpackage !== NULL) {
 			$packageKey = $package === NULL ? $this->context->getSitePackageKey() : $package;
@@ -51,8 +55,8 @@ abstract class AbstractMdViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abstrac
 			$packageContentDirectory = $this->context->getContentDirectory();
 		}
 
-		if (substr($currentPath, -1, 1) != '/') $currentPath .= '/';
-		$fileName = $packageContentDirectory . $currentPath . $name . '.md';
+		if (substr($path, -1, 1) != '/') $path .= '/';
+		$fileName = $packageContentDirectory . $path . $name . '.md';
 
 		if (!file_exists($fileName)) {
 			return '';
