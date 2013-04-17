@@ -43,21 +43,42 @@ abstract class AbstractMdViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abstrac
 	public function render($name = 'Content', $package = NULL, $subpackage = NULL, $path = NULL)
 	{
 
-		if($path === NULL) {
+		if ($path === NULL) {
 			$path = $this->session->getData('currentPath');
 		}
 
-		if($package !== NULL || $subpackage !== NULL) {
+		if ($package !== NULL || $subpackage !== NULL) {
 			$packageKey = $package === NULL ? $this->context->getSitePackageKey() : $package;
 			$subpackageKey = $subpackage === NULL ? $this->controllerContext->getRequest()->getControllerSubpackageKey() : $subpackage;
 			$packageContentDirectory = Files::packageContentDirectory($packageKey, $subpackageKey);
-		}else {
+		} else {
 			$packageContentDirectory = $this->context->getContentDirectory();
 		}
 
 		if (substr($path, -1, 1) != '/') $path .= '/';
-		$fileName = $packageContentDirectory . $path . $name . '.md';
+		$html = '';
 
+		if (empty($name)) {
+
+			// find all files md at path
+			$files = Files::getObjectsInPath($packageContentDirectory . $path, Files::OBJECT_TYPE_FILE, 'md');
+			foreach ($files as $file) {
+				$html .= $this->loadFile($packageContentDirectory . $path . $file);
+			}
+
+		} else {
+			$fileName = $packageContentDirectory . $path . $name . '.md';
+			$html = $this->loadFile($fileName);
+		}
+
+		// create a new fluid template with the cleaned HTML, render it and return the result
+		$view = new \TYPO3\Fluid\View\StandaloneView();
+		$view->setTemplateSource($html);
+		return $view->render();
+	}
+
+	protected function loadFile($path)
+	{
 		if (!file_exists($fileName)) {
 			return '';
 		}
@@ -72,7 +93,7 @@ abstract class AbstractMdViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abstrac
 
 		// find all image tags and replace the sources with fluid resource links
 		$imageTags = $dom->getElementsByTagName('img');
-		foreach($imageTags as $tag) {
+		foreach ($imageTags as $tag) {
 			$src = $tag->getAttribute('src');
 			if (substr($src, 0, 1) == '{') continue;
 			$resource = '{f:uri.resource(path: \'' . $src . '\', package:\'' . ($package === NULL ? $this->context->getSitePackageKey() : $package) . '\')}';
@@ -85,15 +106,7 @@ abstract class AbstractMdViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abstrac
 			$innerHTML .= $dom->saveXML($child);
 		}
 
-		// create a new fluid template with the cleaned HTML, render it and return the result
-		$view = new \TYPO3\Fluid\View\StandaloneView();
-		$view->setTemplateSource($innerHTML);
-		return $view->render();
-	}
-
-	protected function parseMarkDown($markdown)
-	{
-		return $markdown;
+		return $innerHTML;
 	}
 
 }

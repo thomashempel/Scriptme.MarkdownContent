@@ -40,7 +40,7 @@ class IncludeViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper 
 	 *
 	 * @return string
 	 */
-	public function render($package, $controller, $action, $exceptionAs=NULL) {
+	public function render($package, $controller, $action, $exceptionAs = NULL) {
 		$parentRequest = $this->controllerContext->getRequest();
 		$pluginRequest = new ActionRequest($parentRequest);
 		$pluginRequest->setArgumentNamespace('--' . $this->pluginNamespace);
