@@ -55,15 +55,14 @@ abstract class AbstractMdViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abstrac
 			$packageContentDirectory = $this->context->getContentDirectory();
 		}
 
-		if (substr($path, -1, 1) != '/') $path .= '/';
 		$html = '';
+		if (substr($path, -1, 1) != '/') $path .= '/';
 
-		if (empty($name)) {
-
+		if ($name == '_all') {
 			// find all files md at path
 			$files = Files::getObjectsInPath($packageContentDirectory . $path, Files::OBJECT_TYPE_FILE, 'md');
 			foreach ($files as $file) {
-				$html .= $this->loadFile($packageContentDirectory . $path . $file);
+				$html .= $this->loadFile($file);
 			}
 
 		} else {
@@ -77,7 +76,7 @@ abstract class AbstractMdViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abstrac
 		return $view->render();
 	}
 
-	protected function loadFile($path)
+	protected function loadFile($fileName)
 	{
 		if (!file_exists($fileName)) {
 			return '';
