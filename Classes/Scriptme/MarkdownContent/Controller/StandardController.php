@@ -110,7 +110,7 @@ class StandardController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 */
 	protected function handle404($packageContentDirectory) {
 		//Test if a special errorHandling is configured and test if the configured path exists
-		if ($this->settings['errorHandling']['404']) {
+		if (isset($this->settings['errorHandling']) && $this->settings['errorHandling']['404']) {
 			$path = str_replace(array('../', '.html'), '', $this->settings['errorHandling']['404']);
 			$pagePathInFilesystem = $packageContentDirectory . $path;
 
